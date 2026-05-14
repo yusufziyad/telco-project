@@ -1,0 +1,39 @@
+-- TARIFFS (Tarifeler) Tablosu
+-- İlk olarak bunu kuruyoruz çünkü diğer tablolar buradaki tarifelere bağlanacak
+CREATE TABLE TARIFFS (
+    TARIFF_ID NUMBER PRIMARY KEY, -- Primary Key
+    NAME VARCHAR2(100) NOT NULL,
+    MONTHLY_FEE NUMBER NOT NULL,
+    DATA_LIMIT NUMBER,
+    MINUTE_LIMIT NUMBER,
+    SMS_LIMIT NUMBER
+);
+
+-- CUSTOMERS Tablosu
+CREATE TABLE CUSTOMERS (
+    CUSTOMER_ID NUMBER PRIMARY KEY, -- Primary key
+    NAME VARCHAR2(100) NOT NULL,
+    CITY VARCHAR2(100),
+    SIGNUP_DATE DATE,
+    TARIFF_ID NUMBER,
+    -- Müşteriyi tarifesine bağlıyoruz 
+    CONSTRAINT fk_customer_tariff FOREIGN KEY (TARIFF_ID) REFERENCES TARIFFS(TARIFF_ID)
+);
+
+-- Foreign Key'e Index ekliyoruz 
+CREATE INDEX idx_customers_tariff ON CUSTOMERS(TARIFF_ID);
+
+-- MONTHLY_STATS Tablosu
+CREATE TABLE MONTHLY_STATS (
+    ID NUMBER PRIMARY KEY, -- Primary Key
+    CUSTOMER_ID NUMBER,
+    DATA_USAGE NUMBER(10,2), 
+    MINUTE_USAGE NUMBER,
+    SMS_USAGE NUMBER,
+    PAYMENT_STATUS VARCHAR2(20),
+    -- İstatistiği ilgili müşteriye bağlıyoruz 
+    CONSTRAINT fk_stats_customer FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMERS(CUSTOMER_ID)
+);
+
+-- Müşteri aramaları hızlı olsun diye bir Index daha ekliyoruz
+CREATE INDEX idx_monthly_stats_cust ON MONTHLY_STATS(CUSTOMER_ID);

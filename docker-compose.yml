@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    platform: linux/amd64
+    container_name: telco-oracle
+    environment:
+      - ORACLE_PASSWORD=12345
+      - APP_USER=telco_admin
+      - APP_USER_PASSWORD=12345
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+
+volumes:
+  oracle_data:
